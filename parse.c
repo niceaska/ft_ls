@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/15 11:43:29 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/16 21:35:45 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/16 21:54:35 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,7 @@ t_lst 	*fill_list(struct dirent *d, DIR *dir, t_lst *res, char *path)
 			return (NULL);
 	}
 	d = readdir(dir);
+	free(pathname);
 	res->next = fill_list(d, dir, res->next, path);
 	return (res);
 }
@@ -128,7 +129,7 @@ char	**get_dirs(t_lst *list, t_env *e, unsigned int	i)
 {
 	char			**dirs;
 
-	if (!(dirs = (char **)malloc(sizeof(char *) * e->dirs)))
+	if (!(dirs = (char **)malloc(sizeof(char *) * (e->dirs + 1))))
 	{
 		perror("malloc");
 		//free everything
@@ -170,13 +171,16 @@ void	process_dirs(t_env *e, char **dirs, char *path)
 		simple_print(list, e);
 		closedir(dir);
 		free(pathname);
+		free_list(&list);
 		i++;
 	}
+
 }
 
-t_lst	*process_args(t_env **e, char **ag, int ac)
+void	process_args(t_env **e, char **ag, int ac)
 {
 	t_lst	*list;
+	char	*path;
 	char	**dirs;
 
 	list = NULL;
@@ -188,7 +192,10 @@ t_lst	*process_args(t_env **e, char **ag, int ac)
 	count_dirs(e, list);
 	simple_print(list, *e);
 	dirs = get_dirs(list, *e, 0);
-	process_dirs(*e, dirs, ft_strnew(1));
-	return (list);
+	path = ft_strnew(1);
+	process_dirs(*e, dirs, path);
+	free_list(&list);
+	free_tab(dirs);
+	free(path);
 }
 

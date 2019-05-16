@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/14 14:16:53 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/16 17:53:35 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/16 21:50:10 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ unsigned int		list_size(t_lst *list);
 t_lst				*init_list(char *pathname, char *name);
 char				**ft_parser(t_env **e, char **ag, int ac);
 t_env				*init_env(void);
-t_lst				*process_args(t_env **e, char **ag, int ac);
+void				process_args(t_env **e, char **ag, int ac);
 void				simple_print(t_lst *list, t_env *e);
 void				find_maxstrl(t_env **e, t_lst *list);
 void				count_dirs(t_env **e, t_lst *list);
@@ -61,6 +61,9 @@ void				count_dirs(t_env **e, t_lst *list);
 void				merge_sort(t_lst **list, cmp_func cmp);
 int					ft_byalfa(t_lst *l1, t_lst *l2);
 int					ft_revbyalfa(t_lst *l1, t_lst *l2);
+
+void				free_tab(char **tab);
+void				free_list(t_lst **list);
 
 
 #endif

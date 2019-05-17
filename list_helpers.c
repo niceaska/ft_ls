@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/15 13:22:50 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/16 21:28:55 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/17 20:21:50 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ t_lst			*init_list(char *pathname, char *name)
 	{
 		free(new);
 		perror("stat()");
-		//exit(EXIT_FAILURE);
 		return (NULL);
 	}
 	new->print = 1;
@@ -58,15 +57,25 @@ void			find_maxstrl(t_env **e, t_lst *list)
 			(*e)->max_wl = ft_strlen(list->name);
 		list = list->next;
 	}
-	(*e)->max_wl += 4;
+	(*e)->max_wl += 1;
 }
 
-void			count_dirs(t_env **e, t_lst *list)
+void			count_dirs(t_env **e, t_lst *list, int fl)
 {
 	while (list)
 	{
-		if (list->isdir)
-			(*e)->dirs++;
+		if (!fl)
+		{
+			if (list->isdir)
+				(*e)->dirs++;
+		}
+		else
+		{
+			if (list->isdir && ft_strcmp(".", list->name) != 0 \
+				&& ft_strcmp("..", list->name) != 0)
+				(*e)->dirs += (!((*e)->flags & FL_DOT) \
+								&& list->name[0] == '.') ? 0 : 1;
+		}
 		list = list->next;
 	}
 }

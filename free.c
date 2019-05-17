@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 21:29:05 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/16 21:34:21 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/17 17:34:08 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,16 @@ void	free_list(t_lst **list)
 		*list = (*list)->next;
 		free(tmp); 
 	}
+}
+
+void	free_all(char *str, char **tab, t_lst *list, t_env *e)
+{
+	if (str)
+		free(str);
+	if (tab)
+		free_tab(tab);
+	if (list)
+		free_list(&list);
+	if (e)
+		free(e);
 }

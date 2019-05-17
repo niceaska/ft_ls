@@ -6,38 +6,11 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/14 14:17:56 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/16 17:27:21 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/17 17:54:25 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
-
-void	split(t_lst *src, t_lst **left, t_lst **right)
-{
-	t_lst *fst;
-	t_lst *nxt;
-
-    if (!src || !src->next)
-    {
-        *left = src;
-        *right = NULL;
-		return ;
-    }
-	fst = src;
-	nxt = src->next;
-	while (nxt)
-	{
-		nxt = nxt->next;
-		if (nxt)
-		{
-			fst = fst->next;
-			nxt = nxt->next;
-		}
-    }
-    *left = src;
-	*right = fst->next;
-	fst->next = NULL;
-}
 
 static void insert(t_lst **next1, t_lst **next2,
 					t_lst **curr1, t_lst **curr2)
@@ -49,7 +22,7 @@ static void insert(t_lst **next1, t_lst **next2,
 	*curr2 = *next2; 
 }
 
-void	merge_helper(t_lst **curr1, t_lst **curr2, cmp_func cmp)
+static void	merge_helper(t_lst **curr1, t_lst **curr2, cmp_func cmp)
 {
 	t_lst *next1;
 	t_lst *next2;
@@ -75,7 +48,7 @@ void	merge_helper(t_lst **curr1, t_lst **curr2, cmp_func cmp)
 }
 
 
-t_lst	*merge_tool(t_lst *l1, t_lst* l2, cmp_func cmp) 
+static t_lst	*merge_tool(t_lst *l1, t_lst* l2, cmp_func cmp) 
 {
 	t_lst *curr1;
 	t_lst *curr2;
@@ -91,7 +64,7 @@ t_lst	*merge_tool(t_lst *l1, t_lst* l2, cmp_func cmp)
     return (l1); 
 } 
 
-t_lst	*merge(t_lst *l, t_lst *r, cmp_func cmp)
+static t_lst	*merge(t_lst *l, t_lst *r, cmp_func cmp)
 {
     if (!l || !r)
 	{

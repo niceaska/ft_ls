@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/14 14:16:53 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/16 21:50:10 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/17 21:06:30 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ typedef struct		s_env
 	unsigned int	max_wl;
 	unsigned int	ag_cnt;
 	unsigned int	dirs;
+	unsigned int	out;
 }					t_env;
 
 typedef struct		s_lst
@@ -54,16 +55,21 @@ t_lst				*init_list(char *pathname, char *name);
 char				**ft_parser(t_env **e, char **ag, int ac);
 t_env				*init_env(void);
 void				process_args(t_env **e, char **ag, int ac);
-void				simple_print(t_lst *list, t_env *e);
 void				find_maxstrl(t_env **e, t_lst *list);
-void				count_dirs(t_env **e, t_lst *list);
+void				count_dirs(t_env **e, t_lst *list, int fl);
+char				*get_path(char *path, char *new_dir);
+char				**get_dirs(t_lst *list, t_env *e, unsigned int	i, int fl);
+
+void				simple_print(t_lst *list, t_env *e);
+void				printer(t_lst *list, t_env *e, unsigned int i);
 
 void				merge_sort(t_lst **list, cmp_func cmp);
-int					ft_byalfa(t_lst *l1, t_lst *l2);
-int					ft_revbyalfa(t_lst *l1, t_lst *l2);
+void				split(t_lst *src, t_lst **left, t_lst **right);
+cmp_func 			choose_cmp(t_env *e);
 
 void				free_tab(char **tab);
 void				free_list(t_lst **list);
+void				free_all(char *str, char **tab, t_lst *list, t_env *e);
 
 
 #endif

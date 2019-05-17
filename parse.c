@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/15 11:43:29 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/16 21:54:35 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/17 17:46:23 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ t_env			*init_env(void)
 	e->flags = 0;
 	e->max_wl = 0;
 	e->dirs = 0;
+	e->out = 0;
 	return (e);
 }
 
@@ -72,130 +73,3 @@ char	**ft_parser(t_env **e, char **ag, int ac)
 	(*e)->ag_cnt = i;
 	return (ag + i);
 }
-
-t_lst 	*fill_args(char **ag, int ac, int i, t_lst *res)
-{
-	if (ac <= 0 || !ag || !*ag) 
-		return (NULL);
-	if (!(res  = init_list(*ag, *ag)))
-	{
-		if (*(ag + 1) && --ac)
-			res = fill_args(++ag, ac, i, res);
-		else
-			return (NULL);
-	}
-	if (res->isdir)
-		res->print = 0;
-	res->next = fill_args(ag + 1, ac - 1, i + 1, res->next);
-	return (res);
-}
-
-char	*get_path(char *path, char *new_dir)
-{
-	char	*swap;
-	char	*new_path;
-
-	new_path = ft_strnew(ft_strlen(path) + 1);
-	new_path = ft_strcpy(new_path, path);
-	if (*path)
-		new_path[ft_strlen(path)] = '/';
-	swap = new_path;
-	new_path = ft_strjoin(new_path, new_dir);
-	free(swap);
-	return (new_path);
-}
-
-t_lst 	*fill_list(struct dirent *d, DIR *dir, t_lst *res, char *path)
-{
-	char *pathname;
-
-	if (d == NULL) 
-		return (NULL);
-	pathname = get_path(path, d->d_name);
-	if (!(res  = init_list(pathname, d->d_name)))
-	{
-		if ((d = readdir(dir)) != NULL)
-			res = fill_list(d, dir, res, path);
-		else
-			return (NULL);
-	}
-	d = readdir(dir);
-	free(pathname);
-	res->next = fill_list(d, dir, res->next, path);
-	return (res);
-}
-
-char	**get_dirs(t_lst *list, t_env *e, unsigned int	i)
-{
-	char			**dirs;
-
-	if (!(dirs = (char **)malloc(sizeof(char *) * (e->dirs + 1))))
-	{
-		perror("malloc");
-		//free everything
-		exit(EXIT_FAILURE);
-	}
-	while (i < e->dirs)
-	{
-		while (list && !list->isdir)
-			list = list->next;
-		if (!(dirs[i] = ft_strdup(list->name)))
-		{
-			//free everything
-			perror("malloc");
-			//exit(EXIT_FAILURE);
-		}
-		if (list)
-			list = list->next;
-		i++;
-	}
-	dirs[i] = NULL;
-	return (dirs);
-}
-
-
-void	process_dirs(t_env *e, char **dirs, char *path)
-{
-	unsigned int	i;
-	char			*pathname;
-	t_lst			*list;
-	DIR 			*dir;
-
-	i = 0;
-	while (dirs[i])
-	{
-		dir = opendir(dirs[i]);
-		pathname = get_path(path, dirs[i]);
-		list = fill_list(readdir(dir), dir, list, pathname);
-		merge_sort(&list, ft_byalfa);
-		simple_print(list, e);
-		closedir(dir);
-		free(pathname);
-		free_list(&list);
-		i++;
-	}
-
-}
-
-void	process_args(t_env **e, char **ag, int ac)
-{
-	t_lst	*list;
-	char	*path;
-	char	**dirs;
-
-	list = NULL;
-	if (ac <= 0)
-		list = init_list(".", ".");
-	else
-		list = fill_args(ag, ac, 0, list);
-	merge_sort(&list, ft_revbyalfa);
-	count_dirs(e, list);
-	simple_print(list, *e);
-	dirs = get_dirs(list, *e, 0);
-	path = ft_strnew(1);
-	process_dirs(*e, dirs, path);
-	free_list(&list);
-	free_tab(dirs);
-	free(path);
-}
-

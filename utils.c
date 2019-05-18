@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 17:41:02 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/18 19:28:20 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/18 23:01:34 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ void	get_chmod(char chmod[12], char *pathname, int mode)
 	chmod[8] = CHMOD_OWRITE(mode);
 	chmod[9] = CHMOD_OEXEC(mode);
 	//chmod[10] = get_acl(pathname);
-	chmod[11] = '\0';
+	chmod[10] = '\0';
 	if (mode & S_ISUID)
 		chmod[3] = chmod[3] == '-' ? 'S' : 's';
 	if (S_ISGID & mode)

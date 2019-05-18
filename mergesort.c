@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/14 14:17:56 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/17 17:54:25 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/18 22:47:00 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,22 +91,22 @@ void merge_sort(t_lst **list, cmp_func cmp)
 	*list = merge(left, right, cmp);
 }
 
-/*t_lst	*merge(t_lst *l, t_lst *r)
+/*static t_lst	*merge(t_lst *l, t_lst *r, cmp_func cmp)
 {
 	t_lst *res;
 
     if (!l || !r)
         return ((!l) ? r : l);
 
-    if (l->data <= r->data)
+    if (cmp(l, r) < 0)
 	{
         res = l;
-        res->next = merge(l->next, r);
+        res->next = merge(l->next, r, cmp);
     }
     else
 	{
         res = r;
-        res->next = merge(l, r->next);
+        res->next = merge(l, r->next, cmp);
     }
     return (res); 
 }*/

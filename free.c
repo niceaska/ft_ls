@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 21:29:05 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/17 17:34:08 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/18 10:56:10 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,5 +49,8 @@ void	free_all(char *str, char **tab, t_lst *list, t_env *e)
 	if (list)
 		free_list(&list);
 	if (e)
+	{
+		free(e->maxs);
 		free(e);
+	}
 }

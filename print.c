@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 12:27:14 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/17 18:04:56 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/18 18:58:47 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,49 @@ static void		print_cols(t_lst **arr, t_env *e,
 				break ;
 			j++;
 		}
+		ft_printf("\n");
+		i++;
+	}
+}
+static void		print_time(t_lst *el)
+{
+	time_t	now;
+	char	*s;
+
+	time(&now);
+	s = ctime(&(el->stats->st_mtime)) + 4;
+	if ((el->stats->st_mtime + HALF_YEAR < now) \
+		|| (el->stats->st_mtime > now + HALF_YEAR))
+	{
+		ft_printf(" %.6s ", s);
+		s += 15;
+		ft_printf("%.5s ", s);
+		return ;
+	}
+	ft_printf(" %.12s ", s);
+}
+
+static void		print_long(t_lst **arr, t_maxs *maxs,
+							unsigned int size, unsigned int i)
+{
+	ft_printf("total: %ld\n", maxs->total / 2);
+	while (i < size)
+	{
+		ft_printf("%s", arr[i]->chmod);
+		ft_printf(" %*hu", maxs->n_links, arr[i]->stats->st_nlink);
+		ft_printf(" %-*s", maxs->users, getpwuid(arr[i]->stats->st_uid)->pw_name);
+		ft_printf("  %-*s", maxs->groups, getgrgid(arr[i]->stats->st_gid)->gr_name);
+		if (S_ISBLK(arr[i]->stats->st_mode) || S_ISCHR(arr[i]->stats->st_mode))
+		{
+			ft_printf("%*d,", maxs->major + 1, major(arr[i]->stats->st_rdev));
+			ft_printf("%*d", maxs->minor + 1, minor(arr[i]->stats->st_rdev));
+		}
+		else
+			ft_printf("  %*lld", maxs->size, arr[i]->stats->st_size);
+		print_time(arr[i]);
+		ft_printf("%s", arr[i]->name);
+		if (S_ISLNK(arr[i]->stats->st_mode))
+			ft_printf(" -> %s", arr[i]->c);
 		ft_printf("\n");
 		i++;
 	}
@@ -75,7 +118,9 @@ void	printer(t_lst *list, t_env *e, unsigned int i)
 			arr[i++] = list;
 		list = list->next;
 	}
-	print_cols(arr, e, i, 0);
+	(e->flags & FL_LONG) ? init_maxs(&(e->maxs)) : 0;
+	(e->flags & FL_LONG) ? parse_maxs(&(e->maxs), arr, i, 0) : 0;
+	(e->flags & FL_LONG) ? print_long(arr, e->maxs, i, 0) : print_cols(arr, e, i, 0);
 	e->out++;
 	free(arr);
 }

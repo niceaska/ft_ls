@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 17:42:41 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/17 21:04:25 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/18 17:15:58 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,6 @@ static t_lst 	*fill_list(struct dirent *d, DIR *dir, t_lst *res, char *path)
 	return (res);
 }
 
-
-
 static void	process_dirs(t_env *e, char **dirs,char *path, int i)
 {
 	char	**recdir;
@@ -63,7 +61,7 @@ static void	process_dirs(t_env *e, char **dirs,char *path, int i)
 	while (dirs[++i])
 	{
 		pathname = get_path(path, dirs[i]);
-		(e->out) ? printf("\n%s:\n", pathname) : 0;
+		(e->out) ? ft_printf("\n%s:\n", pathname) : 0;
 		dir = opendir(pathname);
 		list = fill_list(readdir(dir), dir, list, pathname);
 		merge_sort(&list, choose_cmp(e));

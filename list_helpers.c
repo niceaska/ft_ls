@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/15 13:22:50 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/17 20:21:50 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/18 15:45:00 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,26 +27,30 @@ unsigned int	list_size(t_lst *list)
 
 t_lst			*init_list(char *pathname, char *name)
 {
-	t_lst *new;
+	t_lst *n;
 
-	if (!(new = (t_lst *)malloc(sizeof(t_lst))))
+	if (!(n = (t_lst *)malloc(sizeof(t_lst))))
 		return (NULL);
-	new->name = ft_strdup(name);
-	new->next = NULL;
-	if (!(new->stats = (struct stat *)malloc(sizeof(struct stat))))
+	n->name = ft_strdup(name);
+	n->next = NULL;
+	if (!(n->stats = (struct stat *)malloc(sizeof(struct stat))))
 	{
-		free(new);
+		free(n);
 		return (NULL);
 	}
-	if ((lstat(pathname, new->stats)) == -1)
+	if ((lstat(pathname, n->stats)) == -1)
 	{
-		free(new);
+		free(n);
 		perror("stat()");
 		return (NULL);
 	}
-	new->print = 1;
-	new->isdir = (new->stats->st_mode & __S_IFDIR) ? 1 : 0;
-	return (new);
+	(S_ISLNK(n->stats->st_mode)) ? ft_bzero(n->c, PATH_MAX + 1) : 0;
+	(S_ISLNK(n->stats->st_mode)) ?\
+					readlink(pathname, n->c, n->stats->st_size) : 0;
+	get_chmod(n->chmod, pathname, n->stats->st_mode);
+	n->print = 1;
+	n->isdir = (S_ISDIR(n->stats->st_mode)) ? 1 : 0;
+	return (n);
 }
 
 void			find_maxstrl(t_env **e, t_lst *list)

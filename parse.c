@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/15 11:43:29 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/18 17:31:22 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/18 19:27:57 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,16 @@ static int		get_termwidth(void)
 {
 	struct winsize w;
     
-	if ((ioctl(STDOUT_FILENO, TIOCGWINSZ, &w)) == -1)
+	if (isatty(STDOUT_FILENO))
 	{
-		perror("ioctl()");
-		exit(EXIT_FAILURE);
+		if ((ioctl(STDOUT_FILENO, TIOCGWINSZ, &w)) == -1)
+		{
+			perror("ioctl()");
+			exit(EXIT_FAILURE);
+		}
 	}
+	else
+		return (80);
 	return (w.ws_col);
 }
 

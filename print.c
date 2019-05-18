@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 12:27:14 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/18 18:58:47 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/18 19:13:07 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static void		print_time(t_lst *el)
 static void		print_long(t_lst **arr, t_maxs *maxs,
 							unsigned int size, unsigned int i)
 {
-	ft_printf("total: %ld\n", maxs->total / 2);
+	ft_printf("total: %ld\n", maxs->total);
 	while (i < size)
 	{
 		ft_printf("%s", arr[i]->chmod);

@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 11:44:02 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/17 21:05:03 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/18 19:45:33 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ static int		ft_byalfa(t_lst *l1, t_lst *l2)
 	char	*name2;
 	int		res;
 
-	name1 = (l1->name[0] == '.') ? ft_strdup(l1->name + 1) : ft_strdup(l1->name);
-	name2 = (l2->name[0] == '.') ? ft_strdup(l2->name + 1) : ft_strdup(l2->name);
+	name1 = ft_strdup(l1->name);
+	name2 = ft_strdup(l2->name);
 	res = ft_strcmp(name1, name2);
 	free(name1);
 	free(name2);
@@ -32,10 +32,8 @@ static int		ft_revbyalfa(t_lst *l1, t_lst *l2)
 	char	*name2;
 	int		res;
 
-	name1 = (l1->name[0] == '.') ? \
-			ft_strdup(l1->name + 1) : ft_strdup(l1->name);
-	name2 = (l2->name[0] == '.') ? \
-			ft_strdup(l2->name + 1) : ft_strdup(l2->name);
+	name1 = ft_strdup(l1->name);
+	name2 = ft_strdup(l2->name);
 	res = ft_strcmp(name2, name1);
 	free(name1);
 	free(name2);

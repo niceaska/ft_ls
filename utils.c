@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 17:41:02 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/18 18:57:09 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/18 19:28:20 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ char	ft_ftype(int mode)
 	return (c);
 }
 
-
+/*
 char	get_acl(char *pathname)
 {
 	acl_t acl;
@@ -114,21 +114,19 @@ char	get_acl(char *pathname)
     char ch;
 
 	xattr = 0;
-  // acl = acl_get_link_np(pathname, ACL_TYPE_EXTENDED);
-  	acl = acl_get_file(pathname, ACL_OTHER);
+	acl = acl_get_link_np(pathname, ACL_TYPE_EXTENDED);
     if (acl && acl_get_entry(acl, ACL_TYPE_DEFAULT, &dummy) == -1)
 	{
         acl_free(acl);
         acl = NULL;
     }
-  //if ((xattr = listxattr(pathname, NULL, XATTR_NOFOLLOW)) > 0)
-	//	ch = '@';
-	if ((xattr = listxattr(pathname, NULL, XATTR_REPLACE) > 0))
+  	if ((xattr = listxattr(pathname, NULL, 0, XATTR_NOFOLLOW)) > 0)
 		ch = '@';
-    ch = (acl != NULL) ? '+' : ' ';
+	else
+    	ch = (acl != NULL) ? '+' : ' ';
 	return (ch);
 }
-
+*/
 void	get_chmod(char chmod[12], char *pathname, int mode)
 {
 	chmod[0] = ft_ftype(mode);
@@ -141,7 +139,7 @@ void	get_chmod(char chmod[12], char *pathname, int mode)
 	chmod[7] = CHMOD_OREAD(mode);
 	chmod[8] = CHMOD_OWRITE(mode);
 	chmod[9] = CHMOD_OEXEC(mode);
-	chmod[10] = get_acl(pathname);
+	//chmod[10] = get_acl(pathname);
 	chmod[11] = '\0';
 	if (mode & S_ISUID)
 		chmod[3] = chmod[3] == '-' ? 'S' : 's';

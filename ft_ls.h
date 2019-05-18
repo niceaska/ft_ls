@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/14 14:16:53 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/18 17:31:53 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/18 19:49:04 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@
 # define CHMOD_GREAD(m)((m) & S_IRGRP) ? 'r' : '-'
 # define CHMOD_GWRITE(m)((m) & S_IWGRP) ? 'w' : '-'
 # define CHMOD_GEXEC(m)((m) & S_IXGRP) ? 'x' : '-'
-# define CHMOD_OWRITE(m)((m) & S_IROTH) ? 'r' : '-'
-# define CHMOD_OREAD(m)((m) & S_IWOTH) ? 'w' : '-'
+# define CHMOD_OWRITE(m)((m) & S_IWOTH) ? 'w' : '-'
+# define CHMOD_OREAD(m)((m) & S_IROTH) ? 'r' : '-'
 # define CHMOD_OEXEC(m)((m) & S_IXOTH) ? 'x' : '-'
 
 # define FL_LONG (1 << 0)

@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 17:42:41 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/18 22:18:59 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/20 16:13:02 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@ static t_lst 	*fill_args(char **ag, int ac, int i, t_lst *res)
 	return (res);
 }
 
-
-
 static t_lst 	*fill_list(struct dirent *d, DIR *dir, t_lst *res, char *path)
 {
 	char *pathname;
@@ -51,6 +49,17 @@ static t_lst 	*fill_list(struct dirent *d, DIR *dir, t_lst *res, char *path)
 	return (res);
 }
 
+static t_lst *proceass_list(t_env *e, DIR *dir, char *pathname)
+{
+	t_lst *list;
+
+	(e->out) ? ft_printf("\n%s:\n", pathname) : 0;
+	list = fill_list(readdir(dir), dir, list, pathname);
+	merge_sort(&list, choose_cmp(e));
+	printer(list, e, 0, 1);
+	return (list);	
+}
+
 static void	process_dirs(t_env *e, char **dirs,char *path, long i)
 {
 	char	**recdir;
@@ -61,12 +70,12 @@ static void	process_dirs(t_env *e, char **dirs,char *path, long i)
 	while (dirs[++i])
 	{
 		pathname = get_path(path, dirs[i]);
-		(e->out) ? ft_printf("\n%s:\n", pathname) : 0;
-		dir = opendir(pathname);
-		//list = fill_list(dir, pathname);
-		list = fill_list(readdir(dir), dir, list, pathname);
-		merge_sort(&list, choose_cmp(e));
-		printer(list, e, 0);
+		if (!(dir = opendir(pathname)))
+		{
+			print_error(NULL, pathname, NULL, NULL);
+			continue ;
+		}
+		list = proceass_list(e, dir, pathname);
 		closedir(dir);
 		if (e->flags & FL_REC)
 		{
@@ -96,7 +105,7 @@ void	process_args(t_env **e, char **ag, int ac)
 		list = fill_args(ag, ac, 0, list);
 	merge_sort(&list, choose_cmp(*e));
 	count_dirs(e, list, 0);
-	simple_print(list, *e);
+	printer(list, *e, 0, 0);
 	dirs = get_dirs(list, *e, 0, 0);
 	path = ft_strnew(1);
 	process_dirs(*e, dirs, path, -1);

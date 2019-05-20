@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/14 14:16:53 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/18 19:49:04 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/20 16:22:04 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,8 +103,8 @@ char				**get_dirs(t_lst *list, t_env *e, unsigned int	i, int fl);
 unsigned int		int_size(int num);
 void				get_chmod(char chmod[12], char *pathname, int mode);
 
-void				simple_print(t_lst *list, t_env *e);
-void				printer(t_lst *list, t_env *e, unsigned int i);
+void				printer(t_lst *list, t_env *e, unsigned int i, int fl_dir);
+void				print_error(t_lst *list, char *pathname, char **tab, t_env *e);
 
 void				merge_sort(t_lst **list, cmp_func cmp);
 void				split(t_lst *src, t_lst **left, t_lst **right);

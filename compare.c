@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 11:44:02 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/18 19:45:33 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/20 16:06:16 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static int		ft_bytime(t_lst *l1, t_lst *l2)
 		return (1);
 	else if (l1->stats->st_mtime > l2->stats->st_mtime)
 		return (-1);
-	return (0);
+	return (ft_byalfa(l1, l2));
 }
 
 static int		ft_revbytime(t_lst *l1, t_lst *l2)
@@ -55,7 +55,7 @@ static int		ft_revbytime(t_lst *l1, t_lst *l2)
 		return (1);
 	else if (l1->stats->st_mtime < l2->stats->st_mtime)
 		return (-1);
-	return (0);
+	return (ft_revbyalfa(l1, l2));
 }
 
 cmp_func choose_cmp(t_env *e)

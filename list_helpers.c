@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/15 13:22:50 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/18 20:32:44 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/20 15:58:25 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ t_lst			*init_list(char *pathname, char *name)
 	if ((lstat(pathname, n->stats)) == -1)
 	{
 		free(n);
-		perror("stat()");
+		print_error(NULL, ft_strdup("stat"), NULL, NULL);
 		return (NULL);
 	}
 	(S_ISLNK(n->stats->st_mode)) ? ft_bzero(n->c, PATH_MAX + 1) : 0;

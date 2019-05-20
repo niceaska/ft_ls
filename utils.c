@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 17:41:02 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/18 23:01:34 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/20 16:21:10 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,69 +82,16 @@ void	split(t_lst *src, t_lst **left, t_lst **right)
 	*right = fst->next;
 	fst->next = NULL;
 }
-char	ft_ftype(int mode)
+
+unsigned int	int_size(int num)
 {
-	char	c;
+	unsigned int s;
 
-	if (S_ISDIR(mode))
-		c = 'd';
-	else if (S_ISCHR(mode))
-		c = 'c';
-	else if (S_ISBLK(mode))
-		c = 'b';
-	else if (S_ISREG(mode))
-		c = '-';
-	else if	(S_ISLNK(mode))
-		c = 'l';
-	else if (S_ISSOCK(mode))
-		c = 's';
-	else if (S_ISFIFO(mode))
-		c = 'p';
-	else
-		c = '?';
-	return (c);
-}
-
-/*
-char	get_acl(char *pathname)
-{
-	acl_t acl;
-    acl_entry_t dummy;
-    ssize_t xattr;
-    char ch;
-
-	xattr = 0;
-	acl = acl_get_link_np(pathname, ACL_TYPE_EXTENDED);
-    if (acl && acl_get_entry(acl, ACL_TYPE_DEFAULT, &dummy) == -1)
+	s = 0;
+	while (num)
 	{
-        acl_free(acl);
-        acl = NULL;
-    }
-  	if ((xattr = listxattr(pathname, NULL, 0, XATTR_NOFOLLOW)) > 0)
-		ch = '@';
-	else
-    	ch = (acl != NULL) ? '+' : ' ';
-	return (ch);
-}
-*/
-void	get_chmod(char chmod[12], char *pathname, int mode)
-{
-	chmod[0] = ft_ftype(mode);
-	chmod[1] = CHMOD_UREAD(mode);
-	chmod[2] = CHMOD_UWRITE(mode);
-	chmod[3] = CHMOD_UEXEC(mode);
-	chmod[4] = CHMOD_GREAD(mode);
-	chmod[5] = CHMOD_GWRITE(mode);
-	chmod[6] = CHMOD_GEXEC(mode);
-	chmod[7] = CHMOD_OREAD(mode);
-	chmod[8] = CHMOD_OWRITE(mode);
-	chmod[9] = CHMOD_OEXEC(mode);
-	//chmod[10] = get_acl(pathname);
-	chmod[10] = '\0';
-	if (mode & S_ISUID)
-		chmod[3] = chmod[3] == '-' ? 'S' : 's';
-	if (S_ISGID & mode)
-		chmod[6] = chmod[6] == '-' ? 'S' : 's';
-	if (S_ISVTX & mode)
-		chmod[9] = chmod[9] == '-' ? 'T' : 't';
+		s++;
+		num /= 10;
+	}
+	return (s);
 }

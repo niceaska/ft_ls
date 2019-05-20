@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 12:27:14 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/18 21:20:02 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/20 16:09:19 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ static void		print_cols(t_lst **arr, t_env *e,
 		i++;
 	}
 }
+
 static void		print_time(t_lst *el)
 {
 	time_t	now;
@@ -58,55 +59,44 @@ static void		print_time(t_lst *el)
 	ft_printf(" %.12s ", s);
 }
 
+static void		long_helper(t_lst *el, t_maxs *maxs)
+{
+	struct group	*gr;
+	struct passwd	*uid;
+
+	ft_printf("%s %*hu", el->chmod, maxs->n_links, el->stats->st_nlink);
+	if ((uid = getpwuid(el->stats->st_uid)) == NULL)
+		ft_printf(" %-*ld", maxs->users, el->stats->st_uid);
+	else
+		ft_printf(" %-*s", maxs->users, uid->pw_name);
+	if ((gr = getgrgid(el->stats->st_gid)) == NULL)
+		ft_printf(" %-*ld", maxs->users, el->stats->st_gid);
+	else
+		ft_printf("  %-*s", maxs->groups, gr->gr_name);
+	if (S_ISBLK(el->stats->st_mode) || S_ISCHR(el->stats->st_mode))
+		ft_printf("%*d,%*d", maxs->major + 1, major(el->stats->st_rdev), 
+						maxs->minor + 1, minor(el->stats->st_rdev));
+	else
+		ft_printf("  %*lld", maxs->size, el->stats->st_size);
+	print_time(el);
+	ft_printf("%s", el->name);
+	if (S_ISLNK(el->stats->st_mode))
+		ft_printf(" -> %s", el->c);
+}
+
 static void		print_long(t_lst **arr, t_maxs *maxs,
 							unsigned int size, unsigned int i)
 {
 	ft_printf("total: %ld\n", maxs->total);
 	while (i < size)
 	{
-		ft_printf("%s", arr[i]->chmod);
-		ft_printf(" %*hu", maxs->n_links, arr[i]->stats->st_nlink);
-		ft_printf(" %-*s", maxs->users, getpwuid(arr[i]->stats->st_uid)->pw_name);
-		ft_printf("  %-*s", maxs->groups, getgrgid(arr[i]->stats->st_gid)->gr_name);
-		if (S_ISBLK(arr[i]->stats->st_mode) || S_ISCHR(arr[i]->stats->st_mode))
-		{
-			ft_printf("%*d,", maxs->major + 1, major(arr[i]->stats->st_rdev));
-			ft_printf("%*d", maxs->minor + 1, minor(arr[i]->stats->st_rdev));
-		}
-		else
-			ft_printf("  %*lld", maxs->size, arr[i]->stats->st_size);
-		print_time(arr[i]);
-		ft_printf("%s", arr[i]->name);
-		if (S_ISLNK(arr[i]->stats->st_mode))
-			ft_printf(" -> %s", arr[i]->c);
+		long_helper(arr[i], maxs);
 		ft_printf("\n");
 		i++;
 	}
 }
 
-void	simple_print(t_lst *list, t_env *e)
-{
-	t_lst			**arr;
-	unsigned int	i;
-
-	i = 0;
-	find_maxstrl(&e, list);
-	if (!(arr = (t_lst **)malloc(sizeof(t_lst *) * (list_size(list) + 1))))
-		return ;
-	while (list)
-	{
-		if (list->print)
-			arr[i++] = list;
-		list = list->next;
-	}
-	if (i)
-		print_cols(arr, e, i, 0);
-	if (i)
-		e->out++;
-	free(arr);
-}
-
-void	printer(t_lst *list, t_env *e, unsigned int i)
+void	printer(t_lst *list, t_env *e, unsigned int i, int fl_dir)
 {
 	t_lst			**arr;
 
@@ -116,7 +106,10 @@ void	printer(t_lst *list, t_env *e, unsigned int i)
 		return ;
 	while (list)
 	{
-		if ((e->flags & FL_DOT) || list->name[0] != '.')
+		if (((e->flags & FL_DOT)\
+			|| list->name[0] != '.') && fl_dir)
+			arr[i++] = list;
+		else if (list->print && !fl_dir)
 			arr[i++] = list;
 		list = list->next;
 	}
@@ -126,4 +119,11 @@ void	printer(t_lst *list, t_env *e, unsigned int i)
 	if (i)
 		e->out++;
 	free(arr);
+}
+
+void	print_error(t_lst *list, char *pathname, char **tab, t_env *e)
+{
+	write(2, "ls: ", 4);
+	perror(pathname);
+	free_all(pathname, tab, list, e);
 }

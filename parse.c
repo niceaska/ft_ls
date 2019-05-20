@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/15 11:43:29 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/18 19:27:57 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/20 16:21:13 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,57 +30,6 @@ static void		parse_flags(t_env **e, char *s)
 	}
 }
 
-static int		get_termwidth(void)
-{
-	struct winsize w;
-    
-	if (isatty(STDOUT_FILENO))
-	{
-		if ((ioctl(STDOUT_FILENO, TIOCGWINSZ, &w)) == -1)
-		{
-			perror("ioctl()");
-			exit(EXIT_FAILURE);
-		}
-	}
-	else
-		return (80);
-	return (w.ws_col);
-}
-
-void			init_maxs(t_maxs **maxs)
-{
-	(*maxs)->groups = 0;
-	(*maxs)->n_links = 0;
-	(*maxs)->names = 0;
-	(*maxs)->size = 0;
-	(*maxs)->time = 0;
-	(*maxs)->total = 0;
-	(*maxs)->users = 0;
-	(*maxs)->major = 0;
-	(*maxs)->minor = 0;
-}
-
-t_env			*init_env(void)
-{
-	t_env *e;
-
-	if (!(e = (t_env *)malloc(sizeof(t_env))))
-		return (0);
-	if (!(e->maxs = (t_maxs *)malloc(sizeof(t_maxs))))
-	{
-		free(e);
-		return (0);
-	}
-	init_maxs(&(e->maxs));
-	e->ag_cnt = 0;
-	e->w_width = get_termwidth();
-	e->flags = 0;
-	e->max_wl = 0;
-	e->dirs = 0;
-	e->out = 0;
-	return (e);
-}
-
 char	**ft_parser(t_env **e, char **ag, int ac)
 {
 	int i;
@@ -97,17 +46,23 @@ char	**ft_parser(t_env **e, char **ag, int ac)
 	(*e)->ag_cnt = i;
 	return (ag + i);
 }
-unsigned int	int_size(int num)
-{
-	unsigned int s;
 
-	s = 0;
-	while (num)
-	{
-		s++;
-		num /= 10;
-	}
-	return (s);
+static void parse_maxs_helper(t_maxs **maxs, t_lst *el)
+{
+	struct group	*gr;
+	struct passwd	*uid;
+
+	(*maxs)->total += el->stats->st_blocks;
+	(*maxs)->n_links = MAX((*maxs)->n_links, int_size(el->stats->st_nlink));
+	(*maxs)->names = MAX((*maxs)->names, ft_strlen(el->name));
+	if ((gr = getgrgid(el->stats->st_gid)) == NULL)
+		(*maxs)->groups = MAX((*maxs)->groups, int_size(el->stats->st_gid));
+	else
+		(*maxs)->groups = MAX((*maxs)->groups, ft_strlen(gr->gr_name));
+	if ((uid = getpwuid(el->stats->st_uid)) == NULL)
+		(*maxs)->users = MAX((*maxs)->users, int_size(el->stats->st_uid));
+	else
+		(*maxs)->users = MAX((*maxs)->users, ft_strlen(uid->pw_name));
 }
 
 void	parse_maxs(t_maxs **maxs, t_lst **arr, unsigned int size, unsigned int i)
@@ -116,13 +71,7 @@ void	parse_maxs(t_maxs **maxs, t_lst **arr, unsigned int size, unsigned int i)
 
 	while (i < size)
 	{
-		(*maxs)->total += arr[i]->stats->st_blocks;
-		(*maxs)->n_links = MAX((*maxs)->n_links, int_size(arr[i]->stats->st_nlink));
-		(*maxs)->names = MAX((*maxs)->names, ft_strlen(arr[i]->name));
-		(*maxs)->groups = MAX((*maxs)->groups, \
-							ft_strlen(getgrgid(arr[i]->stats->st_gid)->gr_name));
-		(*maxs)->users = MAX((*maxs)->users, \
-							ft_strlen(getpwuid(arr[i]->stats->st_uid)->pw_name));
+		parse_maxs_helper(maxs, arr[i]);
 		if (S_ISCHR(arr[i]->stats->st_mode))
 		{
 			(*maxs)->major = MAX((*maxs)->major, 

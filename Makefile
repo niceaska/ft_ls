@@ -6,10 +6,33 @@
 #    By: lgigi <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/05/15 15:11:29 by lgigi             #+#    #+#              #
-#    Updated: 2019/05/20 16:22:28 by lgigi            ###   ########.fr        #
+#    Updated: 2019/05/22 18:11:31 by lgigi            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-all:
+CC = gcc
+NAME = ft_ls
+CFLAGS = -Wall -Werror -Wextra
+LIBFT_DIR = ./libft/
+LIBFT_INC = includes/
+SRCS =  print.c mergesort.c core.c utils.c error.c print_helpers.c free.c compare.c long_tools.c main.c list_helpers.c parse.c
+OBJS = $(SRCS:.c=.o)
+
+all: $(NAME)
+
+$(NAME):
 	make -C libft
-	gcc  print.c mergesort.c core.c utils.c  free.c compare.c long_tools.c main.c list_helpers.c parse.c libft/*.o -I libft/includes/ -L lft -lacl
+	$(CC) $(CFLAGS) -c $(SRCS) -I $(LIBFT_DIR)$(LIBFT_INC)
+	$(CC) $(CFLAGS) $(OBJS) -o  $(NAME) -L libft/ -lft
+
+clean:
+	make clean -C ./libft
+	rm -f $(OBJS)
+
+fclean: clean
+	make fclean -C ./libft
+	rm -f $(NAME)
+
+re: fclean all
+
+.PHONY: clean fclean all re

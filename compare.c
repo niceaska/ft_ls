@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 11:44:02 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/20 16:06:16 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/22 13:05:43 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,24 @@ static int		ft_revbytime(t_lst *l1, t_lst *l2)
 	return (ft_revbyalfa(l1, l2));
 }
 
+static int		ft_ubytime(t_lst *l1, t_lst *l2)
+{
+	if (l1->stats->st_atime < l2->stats->st_atime)
+		return (1);
+	else if (l1->stats->st_atime > l2->stats->st_atime)
+		return (-1);
+	return (ft_byalfa(l1, l2));
+}
+
+static int		ft_revubytime(t_lst *l1, t_lst *l2)
+{
+	if (l1->stats->st_atime > l2->stats->st_atime)
+		return (1);
+	else if (l1->stats->st_atime < l2->stats->st_atime)
+		return (-1);
+	return (ft_revbyalfa(l1, l2));
+}
+
 cmp_func choose_cmp(t_env *e)
 {
 	cmp_func cmp;
@@ -65,9 +83,9 @@ cmp_func choose_cmp(t_env *e)
 	if (e->flags & FL_TIME)
 	{
 		if (e->flags & FL_REV)
-			cmp = ft_revbytime;
+			cmp = (e->flags & FL_UTIME) ? ft_revubytime : ft_revbytime;
 		else
-			cmp = ft_bytime;
+			cmp = (e->flags & FL_UTIME) ? ft_ubytime : ft_bytime;
 		return (cmp);
 	}
 	if (e->flags & FL_REV)

@@ -6,26 +6,26 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 17:42:41 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/20 16:13:02 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/22 18:30:44 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-static t_lst 	*fill_args(char **ag, int ac, int i, t_lst *res)
+static t_lst 	*fill_args(char **ag, int ac, short flags, t_lst *res)
 {
 	if (ac <= 0 || !ag || !*ag) 
 		return (NULL);
 	if (!(res  = init_list(*ag, *ag)))
 	{
 		if (*(ag + 1) && --ac)
-			res = fill_args(++ag, ac, i, res);
+			res = fill_args(++ag, ac, flags, res);
 		else
 			return (NULL);
 	}
 	if (res->isdir)
-		res->print = 0;
-	res->next = fill_args(ag + 1, ac - 1, i + 1, res->next);
+		res->print = (flags & FL_DIRS) ? 1 : 0;
+	res->next = fill_args(ag + 1, ac - 1, flags, res->next);
 	return (res);
 }
 
@@ -55,12 +55,12 @@ static t_lst *proceass_list(t_env *e, DIR *dir, char *pathname)
 
 	(e->out) ? ft_printf("\n%s:\n", pathname) : 0;
 	list = fill_list(readdir(dir), dir, list, pathname);
-	merge_sort(&list, choose_cmp(e));
+	(e->flags & FL_NOSORT) ? 0 : merge_sort(&list, choose_cmp(e));
 	printer(list, e, 0, 1);
 	return (list);	
 }
 
-static void	process_dirs(t_env *e, char **dirs,char *path, long i)
+static void	process_dirs(t_env *e, char **dirs, char *path, long i)
 {
 	char	**recdir;
 	char	*pathname;
@@ -99,16 +99,16 @@ void	process_args(t_env **e, char **ag, int ac)
 	if (ac <= 0)
 	{
 		list = init_list(".", ".");
-		list->print = 0;
+		list->print = ((*e)->flags & FL_DIRS) ? 1 : 0;
 	}
 	else
-		list = fill_args(ag, ac, 0, list);
-	merge_sort(&list, choose_cmp(*e));
-	count_dirs(e, list, 0);
+		list = fill_args(ag, ac, (*e)->flags, list);
+	((*e)->flags & FL_NOSORT) ? 0 : merge_sort(&list, choose_cmp(*e));
+	((*e)->flags & FL_DIRS) ? 0 : count_dirs(e, list, 0);
 	printer(list, *e, 0, 0);
-	dirs = get_dirs(list, *e, 0, 0);
-	path = ft_strnew(1);
-	process_dirs(*e, dirs, path, -1);
+	dirs = ((*e)->flags & FL_DIRS) ? 0 : get_dirs(list, *e, 0, 0);
+	path = ((*e)->flags & FL_DIRS) ? 0 : ft_strnew(1);
+	((*e)->flags & FL_DIRS) ? 0 : process_dirs(*e, dirs, path, -1);
 	free_all(path, dirs, list, *e);
 }
 

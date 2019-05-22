@@ -6,26 +6,47 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/15 11:43:29 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/20 16:21:13 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/22 17:56:10 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
+static void		process_flags(t_env **e, char c)
+{
+	if (c == 'l')
+		(*e)->flags |= FL_LONG;
+	if (c == 'r')
+		(*e)->flags |= FL_REV;
+	if (c == 'R')
+		(*e)->flags |= FL_REC;
+	if (c == 'a' || c == 'f')
+		(*e)->flags |= FL_DOT;
+	if (c =='t')
+		(*e)->flags |= FL_TIME;
+	if (c =='u')
+		(*e)->flags |= FL_UTIME;
+	if (c =='g')
+		(*e)->flags |= FL_GLONG;
+	if (c =='d')
+		(*e)->flags |= FL_DIRS;
+	if (c =='1')
+		(*e)->flags |= FL_ONE;
+	if (c == 'U' || c == 'f')
+		(*e)->flags |= FL_NOSORT;
+	if (c == 'i')
+		(*e)->flags |= FL_INODE;
+	(*e)->flags |= (c == 'n') ? FL_NGUID : 0;
+	(*e)->flags |= (c == 'x' || c == 'm') ? FL_XPRINT : 0;
+}
+
 static void		parse_flags(t_env **e, char *s)
 {
 	while (*s)
 	{
-		if (*s == 'l')
-			(*e)->flags |= FL_LONG;
-		else if (*s == 'r')
-			(*e)->flags |= FL_REV;
-		else if (*s == 'R')
-			(*e)->flags |= FL_REC;
-		else if (*s == 'a')
-			(*e)->flags |= FL_DOT;
-		else if (*s =='t')
-			(*e)->flags |= FL_TIME;
+		if (!ft_strchr("lrRaftuUgdi1nx", *s))
+			illegal_option(*e, *s);
+		process_flags(e, *s);
 		s++;
 	}
 }
@@ -38,7 +59,7 @@ char	**ft_parser(t_env **e, char **ag, int ac)
 	while (i < ac)
 	{
 		if (ag[i][0] == '-' && ag[i][1])
-			parse_flags(e, ag[i]);
+			parse_flags(e, ag[i] + 1);
 		else
 			break ;
 		i++;
@@ -85,5 +106,4 @@ void	parse_maxs(t_maxs **maxs, t_lst **arr, unsigned int size, unsigned int i)
 		(*maxs)->size = MAX((*maxs)->size, s);
 		i++;
 	}
-	(*maxs)->time = 4;
 }

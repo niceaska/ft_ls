@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/20 16:11:09 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/20 16:15:43 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/22 18:09:16 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ void	get_chmod(char chmod[12], char *pathname, int mode)
 	int i;
 
 	i = 0;
+	ft_strlen(pathname);
 	chmod[i++] = ft_ftype(mode);
 	chmod[i++] = CHMOD_UREAD(mode);
 	chmod[i++] = CHMOD_UWRITE(mode);

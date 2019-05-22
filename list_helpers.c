@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/15 13:22:50 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/20 15:58:25 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/22 15:46:41 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,12 @@ t_lst			*init_list(char *pathname, char *name)
 	n->next = NULL;
 	if (!(n->stats = (struct stat *)malloc(sizeof(struct stat))))
 	{
-		free(n);
+		print_error(n, ft_strdup(pathname), NULL, NULL);
 		return (NULL);
 	}
 	if ((lstat(pathname, n->stats)) == -1)
 	{
-		free(n);
-		print_error(NULL, ft_strdup("stat"), NULL, NULL);
+		print_error(n, ft_strdup(pathname), NULL, NULL);
 		return (NULL);
 	}
 	(S_ISLNK(n->stats->st_mode)) ? ft_bzero(n->c, PATH_MAX + 1) : 0;
@@ -55,10 +54,15 @@ t_lst			*init_list(char *pathname, char *name)
 
 void			find_maxstrl(t_env **e, t_lst *list)
 {
+	(*e)->max_wl = 1;
+	(*e)->max_ino = 0;
 	while (list)
 	{
 		if (ft_strlen(list->name) > (*e)->max_wl)
 			(*e)->max_wl = ft_strlen(list->name);
+		if ((*e)->flags & FL_INODE)
+			if (int_size(list->stats->st_ino) > (*e)->max_ino)
+				(*e)->max_ino = int_size(list->stats->st_ino);
 		list = list->next;
 	}
 	(*e)->max_wl += 1;

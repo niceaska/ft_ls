@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 17:41:02 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/20 16:21:10 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/22 14:57:14 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	split(t_lst *src, t_lst **left, t_lst **right)
 	fst->next = NULL;
 }
 
-unsigned int	int_size(int num)
+unsigned int	int_size(long num)
 {
 	unsigned int s;
 

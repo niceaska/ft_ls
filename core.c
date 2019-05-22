@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 17:42:41 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/22 20:20:10 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/22 20:59:06 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 static t_lst 	*fill_args(char **ag, int ac, short flags, t_lst *res)
 {
-	struct stat st;
+	struct stat		st;
+	char			*path;
 
 	if (ac <= 0 || !ag || !*ag) 
 		return (NULL);
@@ -28,9 +29,11 @@ static t_lst 	*fill_args(char **ag, int ac, short flags, t_lst *res)
 	if (res && S_ISLNK(res->stats->st_mode) && !(flags & FL_DIRS)\
 	&& !((flags & FL_LONG) || (flags & FL_NGUID) || (flags & FL_GLONG)))
 	{
-		stat(res->c, &st);
-		if (S_ISDIR(st.st_mode))
-			res->isdir = 1;
+		path = (res->c[0] == '.' && res->c[1] == '.' && res->c[2] == '/') ? \
+								get_path(res->name, res->c) : ft_strdup(res->c);
+		stat(path, &st);
+		res->isdir = (S_ISDIR(st.st_mode)) ? 1 : 0;
+		free(path);
 	}
 	if (res->isdir && res)
 		res->print = (flags & FL_DIRS) ? 1 : 0;

@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 17:42:41 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/22 18:30:44 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/22 20:20:10 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,25 @@
 
 static t_lst 	*fill_args(char **ag, int ac, short flags, t_lst *res)
 {
+	struct stat st;
+
 	if (ac <= 0 || !ag || !*ag) 
 		return (NULL);
-	if (!(res  = init_list(*ag, *ag)))
+	if (!(res = init_list(*ag, *ag)))
 	{
 		if (*(ag + 1) && --ac)
-			res = fill_args(++ag, ac, flags, res);
+			return (fill_args(++ag, ac, flags, res));
 		else
 			return (NULL);
 	}
-	if (res->isdir)
+	if (res && S_ISLNK(res->stats->st_mode) && !(flags & FL_DIRS)\
+	&& !((flags & FL_LONG) || (flags & FL_NGUID) || (flags & FL_GLONG)))
+	{
+		stat(res->c, &st);
+		if (S_ISDIR(st.st_mode))
+			res->isdir = 1;
+	}
+	if (res->isdir && res)
 		res->print = (flags & FL_DIRS) ? 1 : 0;
 	res->next = fill_args(ag + 1, ac - 1, flags, res->next);
 	return (res);
@@ -53,6 +62,7 @@ static t_lst *proceass_list(t_env *e, DIR *dir, char *pathname)
 {
 	t_lst *list;
 
+	list = 0;
 	(e->out) ? ft_printf("\n%s:\n", pathname) : 0;
 	list = fill_list(readdir(dir), dir, list, pathname);
 	(e->flags & FL_NOSORT) ? 0 : merge_sort(&list, choose_cmp(e));
@@ -104,8 +114,8 @@ void	process_args(t_env **e, char **ag, int ac)
 	else
 		list = fill_args(ag, ac, (*e)->flags, list);
 	((*e)->flags & FL_NOSORT) ? 0 : merge_sort(&list, choose_cmp(*e));
-	((*e)->flags & FL_DIRS) ? 0 : count_dirs(e, list, 0);
 	printer(list, *e, 0, 0);
+	((*e)->flags & FL_DIRS) ? 0 : count_dirs(e, list, 0);
 	dirs = ((*e)->flags & FL_DIRS) ? 0 : get_dirs(list, *e, 0, 0);
 	path = ((*e)->flags & FL_DIRS) ? 0 : ft_strnew(1);
 	((*e)->flags & FL_DIRS) ? 0 : process_dirs(*e, dirs, path, -1);

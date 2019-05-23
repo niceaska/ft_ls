@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 12:27:14 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/23 15:47:14 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/23 16:30:11 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static void		print_long(t_lst **arr, t_env *e, unsigned int size)
 	unsigned int i;
 
 	i = 0;
-	(!e->out && !e->dirs) ? 0 : ft_printf("total: %ld\n", e->maxs->total);
+	(!e->out && !e->dirs) ? 0 : ft_printf("total %ld\n", e->maxs->total);
 	while (i < size)
 	{
 		long_helper(arr[i], e->maxs, e);

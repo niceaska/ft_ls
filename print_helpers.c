@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 17:58:06 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/23 15:10:26 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/23 16:19:47 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,28 +38,31 @@ void		print_name(t_lst *el, t_env *e)
 {
 	long ret;
 
-	if (e->flags & FL_INODE)
+	if ((e->flags & FL_INODE) && !((e->flags & FL_LONG) || \
+		(e->flags & FL_NGUID) || (e->flags & FL_GLONG)))
 		ft_printf("%*ju ", e->max_ino, (uintmax_t)el->stats->st_ino);
 	if (e-> flags & FL_COLOR)
 		ft_putstr(choose_color(el->stats->st_mode));
-	ret = ft_printf("%s", el->name);
+	ret = write(1, el->name, ft_strlen(el->name));
 	if (e->flags & FL_COLOR)
 		ft_putstr(COL);
-	if (!(e->flags & FL_ONE))
+	if (!(e->flags & FL_ONE) && !((e->flags & FL_LONG) || \
+		(e->flags & FL_NGUID) || (e->flags & FL_GLONG)))
 		while (ret < e->max_wl)
 			ret += write(1, " ", 1);
 }
 
-void		get_rcols(t_env *e, unsigned int *rows,
-							unsigned int size, unsigned int *cols)
+static void		print_str(char *str, long max, short fl)
 {
-	if (e->flags & FL_INODE)
-		*cols = e->w_width / (e->max_wl + e->max_ino + 1);
+	long ret;
+
+	if (fl)
+		write(1, " ", 1);
 	else
-		*cols = e->w_width / e->max_wl;
-	*cols = (*cols == 0) ? 1 : *cols;
-	*rows = size / *cols;
-	*rows += (size % *cols) ? 1 : 0;
+		write(1, "  ", 2);
+	ret = write(1, str, ft_strlen(str));
+	while (ret < max)
+		ret += write(1, " ", 1);
 }
 
 static void		print_time(t_lst *el, short flags)
@@ -87,30 +90,28 @@ static void		print_time(t_lst *el, short flags)
 	ft_printf(" %.12s ", s);
 }
 
-void		long_helper(t_lst *el, t_maxs *maxs, short flags)
+void		long_helper(t_lst *el, t_maxs *maxs, t_env *e)
 {
 	struct group	*gr;
 	struct passwd	*uid;
 
-	(flags & FL_INODE) ? ft_printf("%*ju ", maxs->inode, (uintmax_t)el->stats->st_ino) : 0;
+	(e->flags & FL_INODE) ? ft_printf("%*ju ", maxs->inode, (uintmax_t)el->stats->st_ino) : 0;
 	ft_printf("%s %*hu", el->chmod, maxs->n_links, el->stats->st_nlink);
-	if (((uid = getpwuid(el->stats->st_uid)) == NULL) || (flags & FL_NGUID))
-		(flags & FL_GLONG) ? 0 : ft_printf(" %-*ld", maxs->users, el->stats->st_uid);
+	if (((uid = getpwuid(el->stats->st_uid)) == NULL) || (e->flags & FL_NGUID))
+		(e->flags & FL_GLONG) ? 0 : ft_printf(" %-*ld", maxs->users, el->stats->st_uid);
 	else
-		(flags & FL_GLONG) ? 0 : ft_printf(" %-*s", maxs->users, uid->pw_name);
-	if (((gr = getgrgid(el->stats->st_gid)) == NULL) || (flags & FL_NGUID))
-		ft_printf(" %-*ld", maxs->users, el->stats->st_gid);
+		(e->flags & FL_GLONG) ? 0 : print_str(uid->pw_name, (long)maxs->users, 1);
+	if (((gr = getgrgid(el->stats->st_gid)) == NULL) || (e->flags & FL_NGUID))
+		ft_printf("  %-*ld", maxs->groups, el->stats->st_gid);
 	else
-		ft_printf("  %-*s", maxs->groups, gr->gr_name);
+		print_str(gr->gr_name, (long)maxs->groups, 0);
 	if (S_ISBLK(el->stats->st_mode) || S_ISCHR(el->stats->st_mode))
 		ft_printf("%*d,%*d", maxs->major + 1, major(el->stats->st_rdev), 
 						maxs->minor + 1, minor(el->stats->st_rdev));
 	else
 		ft_printf("  %*lld", maxs->size, el->stats->st_size);
-	print_time(el, flags);
-	(flags & FL_COLOR) ? ft_putstr(choose_color(el->stats->st_mode)) : 0;
-	ft_printf("%s", el->name);
-	(flags & FL_COLOR) ? ft_putstr(COL) : 0;
+	print_time(el, e->flags);
+	print_name(el, e);
 	if (S_ISLNK(el->stats->st_mode))
 		ft_printf(" -> %s", el->c);
 }

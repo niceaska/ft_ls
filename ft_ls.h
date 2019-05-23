@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/14 14:16:53 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/23 14:49:49 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/23 15:52:13 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ void				get_rcols(t_env *e, unsigned int *rows,
 										unsigned int size, unsigned int *cols);
 void				printer(t_lst *list, t_env *e, unsigned int i, int fl_dir);
 void				print_name(t_lst *el, t_env *e);
-void				long_helper(t_lst *el, t_maxs *maxs, short flags);
+void				long_helper(t_lst *el, t_maxs *maxs, t_env *e);
 
 void				print_error(t_lst *list, char *pathname, char **tab, t_env *e);
 void				illegal_option(t_env *e, char c);

@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 17:41:02 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/22 14:57:14 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/23 16:08:38 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,4 +94,16 @@ unsigned int	int_size(long num)
 		num /= 10;
 	}
 	return (s);
+}
+
+void		get_rcols(t_env *e, unsigned int *rows,
+							unsigned int size, unsigned int *cols)
+{
+	if (e->flags & FL_INODE)
+		*cols = e->w_width / (e->max_wl + e->max_ino + 1);
+	else
+		*cols = e->w_width / e->max_wl;
+	*cols = (*cols == 0) ? 1 : *cols;
+	*rows = size / *cols;
+	*rows += (size % *cols) ? 1 : 0;
 }

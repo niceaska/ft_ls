@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 17:58:06 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/23 13:25:58 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/23 15:10:26 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,12 @@ static void		print_time(t_lst *el, short flags)
 	char	*s;
 
 	time(&now);
-	el_time = (flags & FL_UTIME) ? \
-			el->stats->st_atime : el->stats->st_mtime;
+	if (flags & FL_UTIME)
+		el_time = el->stats->st_atime;
+	else if (flags & FL_CTIME)
+		el_time = el->stats->st_ctime;
+	else
+		el_time = el->stats->st_mtime;
 	s = ctime(&el_time) + 4;
 	if ((el_time + HALF_YEAR < now) \
 		|| (el_time > now + HALF_YEAR))

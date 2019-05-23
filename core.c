@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 17:42:41 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/22 20:59:06 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/23 14:47:01 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static t_lst *proceass_list(t_env *e, DIR *dir, char *pathname)
 	list = 0;
 	(e->out) ? ft_printf("\n%s:\n", pathname) : 0;
 	list = fill_list(readdir(dir), dir, list, pathname);
-	(e->flags & FL_NOSORT) ? 0 : merge_sort(&list, choose_cmp(e));
+	(e->flags & FL_NOSORT) ? 0 : merge_sort(&list, choose_cmp(e), e);
 	printer(list, e, 0, 1);
 	return (list);	
 }
@@ -116,7 +116,7 @@ void	process_args(t_env **e, char **ag, int ac)
 	}
 	else
 		list = fill_args(ag, ac, (*e)->flags, list);
-	((*e)->flags & FL_NOSORT) ? 0 : merge_sort(&list, choose_cmp(*e));
+	((*e)->flags & FL_NOSORT) ? 0 : merge_sort(&list, choose_cmp(*e), *e);
 	printer(list, *e, 0, 0);
 	((*e)->flags & FL_DIRS) ? 0 : count_dirs(e, list, 0);
 	dirs = ((*e)->flags & FL_DIRS) ? 0 : get_dirs(list, *e, 0, 0);

@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/15 11:43:29 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/23 13:37:01 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/23 15:07:19 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,16 @@
 
 static void		process_flags(t_env **e, char c)
 {
-	if (c == 'l')
-		(*e)->flags |= FL_LONG;
-	if (c == 'r')
-		(*e)->flags |= FL_REV;
-	if (c == 'R')
-		(*e)->flags |= FL_REC;
-	if (c == 'a' || c == 'f')
-		(*e)->flags |= FL_DOT;
-	if (c =='t')
-		(*e)->flags |= FL_TIME;
-	if (c =='u')
-		(*e)->flags |= FL_UTIME;
-	if (c =='g')
-		(*e)->flags |= FL_GLONG;
-	if (c =='d')
-		(*e)->flags |= FL_DIRS;
-	if (c =='1')
-		(*e)->flags |= FL_ONE;
+	(*e)->flags |= (c == 'l') ? FL_LONG : 0;
+	(*e)->flags |= (c == 'r') ? FL_REV : 0;
+	(*e)->flags |= (c == 'R') ? FL_REC : 0;
+	(*e)->flags |= (c == 'a' || c == 'f') ? FL_DOT : 0;
+	(*e)->flags |= (c =='t') ? FL_TIME : 0;
+	(*e)->flags |= (c =='u') ? FL_UTIME : 0;
+	(*e)->flags |= (c == 'c') ? FL_CTIME : 0;
+	(*e)->flags |= (c =='g') ? FL_GLONG : 0;
+	(*e)->flags |= (c =='d') ? FL_DIRS : 0;
+	(*e)->flags |= (c =='1') ? FL_ONE : 0;
 	(*e)->flags |= (c == 'U' || c == 'f') ? FL_NOSORT : 0;
 	(*e)->flags |= (c == 'i') ? FL_INODE : 0;
 	(*e)->flags |= (c == 'n') ? FL_NGUID : 0;
@@ -43,7 +35,7 @@ static void		parse_flags(t_env **e, char *s)
 {
 	while (*s)
 	{
-		if (!ft_strchr("lrRaftuUgdi1nxG", *s))
+		if (!ft_strchr("lrRaftucUgdi1nxG", *s))
 			illegal_option(*e, *s);
 		process_flags(e, *s);
 		s++;

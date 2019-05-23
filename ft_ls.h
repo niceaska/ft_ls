@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/14 14:16:53 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/23 13:32:51 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/23 14:49:49 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@
 # define FL_NGUID (1 << 11)
 # define FL_XPRINT (1 << 12)
 # define FL_COLOR (1 << 13)
+# define FL_CTIME (1 << 14)
 
 # define HALF_YEAR 15778463
 
@@ -103,7 +104,7 @@ typedef struct		s_lst
 	struct s_lst	*next;
 }					t_lst;
 
-typedef int (*t_cmp_func)(t_lst *, t_lst *);
+typedef int (*t_cmp_func)(t_lst *, t_lst *, t_env *e);
 
 unsigned int		list_size(t_lst *list);
 t_lst				*init_list(char *pathname, char *name);
@@ -131,13 +132,12 @@ void				long_helper(t_lst *el, t_maxs *maxs, short flags);
 void				print_error(t_lst *list, char *pathname, char **tab, t_env *e);
 void				illegal_option(t_env *e, char c);
 
-void				merge_sort(t_lst **list, t_cmp_func cmp);
+void				merge_sort(t_lst **list, t_cmp_func cmp, t_env *e);
 void				split(t_lst *src, t_lst **left, t_lst **right);
 t_cmp_func 			choose_cmp(t_env *e);
 
 void				free_tab(char **tab);
 void				free_list(t_lst **list);
 void				free_all(char *str, char **tab, t_lst *list, t_env *e);
-
 
 #endif

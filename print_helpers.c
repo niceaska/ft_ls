@@ -6,20 +6,48 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 17:58:06 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/22 18:00:27 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/23 13:25:58 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
+static char		*choose_color(mode_t mode)
+{
+	char *color;
+
+	if (S_ISDIR(mode))
+		color = DIR_COL;
+	else if (S_ISCHR(mode) || S_ISBLK(mode))
+		color = BLKCHR_COL;
+	else if	(S_ISLNK(mode))
+		color = LINK_COL;
+	else if (S_ISSOCK(mode))
+		color = SOCK_COL;
+	else if (S_ISFIFO(mode))
+		color = FIFO_COL;
+	else if ((mode & S_IXUSR) \
+			&& (mode & S_IXGRP)  && (mode & S_IXOTH))
+		color = EXEC_COL;
+	else
+		color = FILE_COL;
+	return (color);
+}
+
 void		print_name(t_lst *el, t_env *e)
 {
+	long ret;
+
 	if (e->flags & FL_INODE)
 		ft_printf("%*ju ", e->max_ino, (uintmax_t)el->stats->st_ino);
-	if ((e->flags & FL_ONE) || (e->flags & FL_MPRINT))
-		ft_printf("%s", el->name);
-	else
-		ft_printf("%-*s", e->max_wl, el->name);
+	if (e-> flags & FL_COLOR)
+		ft_putstr(choose_color(el->stats->st_mode));
+	ret = ft_printf("%s", el->name);
+	if (e->flags & FL_COLOR)
+		ft_putstr(COL);
+	if (!(e->flags & FL_ONE))
+		while (ret < e->max_wl)
+			ret += write(1, " ", 1);
 }
 
 void		get_rcols(t_env *e, unsigned int *rows,
@@ -76,7 +104,9 @@ void		long_helper(t_lst *el, t_maxs *maxs, short flags)
 	else
 		ft_printf("  %*lld", maxs->size, el->stats->st_size);
 	print_time(el, flags);
+	(flags & FL_COLOR) ? ft_putstr(choose_color(el->stats->st_mode)) : 0;
 	ft_printf("%s", el->name);
+	(flags & FL_COLOR) ? ft_putstr(COL) : 0;
 	if (S_ISLNK(el->stats->st_mode))
 		ft_printf(" -> %s", el->c);
 }

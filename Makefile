@@ -6,7 +6,7 @@
 #    By: lgigi <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/05/15 15:11:29 by lgigi             #+#    #+#              #
-#    Updated: 2019/05/22 19:23:18 by lgigi            ###   ########.fr        #
+#    Updated: 2019/05/23 11:22:57 by lgigi            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)
 
-$(NAME):
+$(NAME): $(SRCS)
 	make -C libft
 	$(CC) $(CFLAGS) -c $(SRCS) -I $(LIBFT_DIR)$(LIBFT_INC)
 	$(CC) $(CFLAGS) $(OBJS) -o  $(NAME) -L libft/ -lft

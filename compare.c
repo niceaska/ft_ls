@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 11:44:02 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/22 13:05:43 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/23 11:05:02 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,9 +76,9 @@ static int		ft_revubytime(t_lst *l1, t_lst *l2)
 	return (ft_revbyalfa(l1, l2));
 }
 
-cmp_func choose_cmp(t_env *e)
+t_cmp_func choose_cmp(t_env *e)
 {
-	cmp_func cmp;
+	t_cmp_func cmp;
 
 	if (e->flags & FL_TIME)
 	{

@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/20 16:11:09 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/22 18:09:16 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/23 13:24:49 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ char	get_acl(char *pathname)
 }
 */
 
-void	get_chmod(char chmod[12], char *pathname, int mode)
+void	get_chmod(char chmod[12], char *pathname, mode_t mode)
 {
 	int i;
 
@@ -67,19 +67,22 @@ void	get_chmod(char chmod[12], char *pathname, int mode)
 	chmod[i++] = ft_ftype(mode);
 	chmod[i++] = CHMOD_UREAD(mode);
 	chmod[i++] = CHMOD_UWRITE(mode);
-	chmod[i++] = CHMOD_UEXEC(mode);
+	if ((chmod[i] = CHMOD_UEXEC(mode)) == '-')
+		chmod[i++] = (mode & S_ISUID) ? 'S' : '-';
+	else
+		chmod[i++] = (mode & S_ISUID) ? 's' : 'x';
 	chmod[i++] = CHMOD_GREAD(mode);
 	chmod[i++] = CHMOD_GWRITE(mode);
-	chmod[i++] = CHMOD_GEXEC(mode);
+	if ((chmod[i] = CHMOD_GEXEC(mode)) == '-')
+		chmod[i++] = (mode & S_ISGID) ? 'S' : '-';
+	else
+		chmod[i++] = (mode & S_ISGID) ? 's' : 'x';
 	chmod[i++] = CHMOD_OREAD(mode);
 	chmod[i++] = CHMOD_OWRITE(mode);
-	chmod[i++] = CHMOD_OEXEC(mode);
+	if ((chmod[i] = CHMOD_OEXEC(mode)) == '-')
+		chmod[i++] = (mode & S_ISVTX) ? 'T' : '-';
+	else
+		chmod[i++] = (mode & S_ISVTX) ? 't' : 'x';
 	//chmod[i++] = get_acl(pathname);
 	chmod[i] = '\0';
-	if (mode & S_ISUID)
-		chmod[3] = chmod[3] == '-' ? 'S' : 's';
-	if (S_ISGID & mode)
-		chmod[6] = chmod[6] == '-' ? 'S' : 's';
-	if (S_ISVTX & mode)
-		chmod[9] = chmod[9] == '-' ? 'T' : 't';
 }

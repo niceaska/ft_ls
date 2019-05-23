@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/14 14:16:53 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/22 18:03:15 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/23 13:32:51 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,15 @@
 # include <stdio.h>
 # include <limits.h>
 # include <linux/limits.h>
+
+# define FILE_COL "\033[00m"
+# define LINK_COL "\033[01;36m"
+# define DIR_COL "\033[01;34m"
+# define FIFO_COL "\033[01;33m"
+# define SOCK_COL "\033[01;35m"
+# define EXEC_COL "\033[01;32m"
+# define BLKCHR_COL "\033[01;33;01m"
+# define COL "\033[0m"
 
 # define CHMOD_UREAD(m)((m) & S_IRUSR) ? 'r' : '-'
 # define CHMOD_UWRITE(m)((m) & S_IWUSR) ? 'w' : '-'
@@ -53,7 +62,7 @@
 # define FL_INODE (1 << 10)
 # define FL_NGUID (1 << 11)
 # define FL_XPRINT (1 << 12)
-# define FL_MPRINT (1 << 13)
+# define FL_COLOR (1 << 13)
 
 # define HALF_YEAR 15778463
 
@@ -94,13 +103,13 @@ typedef struct		s_lst
 	struct s_lst	*next;
 }					t_lst;
 
-typedef int (*cmp_func)(t_lst *, t_lst *);
+typedef int (*t_cmp_func)(t_lst *, t_lst *);
 
 unsigned int		list_size(t_lst *list);
 t_lst				*init_list(char *pathname, char *name);
 char				**ft_parser(t_env **e, char **ag, int ac);
 void				parse_maxs(t_maxs **maxs, t_lst **arr,
-								unsigned int size, unsigned int i);
+								unsigned int size, short flags);
 
 t_env				*init_env(void);
 void				init_maxs(t_maxs **maxs);
@@ -112,7 +121,7 @@ void				count_dirs(t_env **e, t_lst *list, int fl);
 char				*get_path(char *path, char *new_dir);
 char				**get_dirs(t_lst *list, t_env *e, unsigned int	i, int fl);
 unsigned int		int_size(long num);
-void				get_chmod(char chmod[12], char *pathname, int mode);
+void				get_chmod(char chmod[12], char *pathname, mode_t mode);
 void				get_rcols(t_env *e, unsigned int *rows,
 										unsigned int size, unsigned int *cols);
 void				printer(t_lst *list, t_env *e, unsigned int i, int fl_dir);
@@ -122,9 +131,9 @@ void				long_helper(t_lst *el, t_maxs *maxs, short flags);
 void				print_error(t_lst *list, char *pathname, char **tab, t_env *e);
 void				illegal_option(t_env *e, char c);
 
-void				merge_sort(t_lst **list, cmp_func cmp);
+void				merge_sort(t_lst **list, t_cmp_func cmp);
 void				split(t_lst *src, t_lst **left, t_lst **right);
-cmp_func 			choose_cmp(t_env *e);
+t_cmp_func 			choose_cmp(t_env *e);
 
 void				free_tab(char **tab);
 void				free_list(t_lst **list);

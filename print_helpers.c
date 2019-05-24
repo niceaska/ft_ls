@@ -6,32 +6,38 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 17:58:06 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/23 16:19:47 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/24 12:38:22 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-static char		*choose_color(mode_t mode)
+static char		*choose_color(mode_t mode, char *chmod, char *link_buf)
 {
-	char *color;
-
-	if (S_ISDIR(mode))
-		color = DIR_COL;
+	if (S_ISDIR(mode) && chmod[9] != 't')
+		return (DIR_COL);
+	else if (S_ISDIR(mode) && chmod[9] == 't')
+		return (STICKY_COL);
 	else if (S_ISCHR(mode) || S_ISBLK(mode))
-		color = BLKCHR_COL;
-	else if	(S_ISLNK(mode))
-		color = LINK_COL;
+		return (BLKCHR_COL);
+	else if	(S_ISLNK(mode) && *link_buf)
+		return (LINK_COL);
+	else if (S_ISLNK(mode) && !*link_buf)
+		return (ORPAN_COL);
 	else if (S_ISSOCK(mode))
-		color = SOCK_COL;
+		return (SOCK_COL);
 	else if (S_ISFIFO(mode))
-		color = FIFO_COL;
+		return (FIFO_COL);
+	else if ((mode & S_IXUSR) && chmod[3] == 's' \
+			&& (mode & S_IXGRP)  && (mode & S_IXOTH))
+		return (SETUID_COL);
+	else if ((mode & S_IXUSR) && chmod[6] == 's' \
+			&& (mode & S_IXGRP)  && (mode & S_IXOTH))
+		return (SETGID_COL);
 	else if ((mode & S_IXUSR) \
 			&& (mode & S_IXGRP)  && (mode & S_IXOTH))
-		color = EXEC_COL;
-	else
-		color = FILE_COL;
-	return (color);
+		return (EXEC_COL);
+	return (FILE_COL);
 }
 
 void		print_name(t_lst *el, t_env *e)
@@ -42,7 +48,7 @@ void		print_name(t_lst *el, t_env *e)
 		(e->flags & FL_NGUID) || (e->flags & FL_GLONG)))
 		ft_printf("%*ju ", e->max_ino, (uintmax_t)el->stats->st_ino);
 	if (e-> flags & FL_COLOR)
-		ft_putstr(choose_color(el->stats->st_mode));
+		ft_putstr(choose_color(el->stats->st_mode, el->chmod, el->c));
 	ret = write(1, el->name, ft_strlen(el->name));
 	if (e->flags & FL_COLOR)
 		ft_putstr(COL);

@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/14 14:16:53 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/23 15:52:13 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/24 12:20:20 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,12 @@
 # define SOCK_COL "\033[01;35m"
 # define EXEC_COL "\033[01;32m"
 # define BLKCHR_COL "\033[01;33;01m"
+# define ORPAN_COL "\033[40;31;01m"
+# define SETUID_COL "\033[37;41m"
+# define SETGID_COL "\033[30;43m"
+# define STICKY_COL "\033[37;44m"
 # define COL "\033[0m"
+
 
 # define CHMOD_UREAD(m)((m) & S_IRUSR) ? 'r' : '-'
 # define CHMOD_UWRITE(m)((m) & S_IWUSR) ? 'w' : '-'
@@ -64,6 +69,7 @@
 # define FL_XPRINT (1 << 12)
 # define FL_COLOR (1 << 13)
 # define FL_CTIME (1 << 14)
+# define FL_BYSIZE (1 << 15)
 
 # define HALF_YEAR 15778463
 

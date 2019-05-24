@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/15 11:43:29 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/23 15:07:19 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/24 12:07:42 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,14 @@ static void		process_flags(t_env **e, char c)
 	(*e)->flags |= (c == 'n') ? FL_NGUID : 0;
 	(*e)->flags |= (c == 'x') ? FL_XPRINT : 0;
 	(*e)->flags |= (c == 'G') ? FL_COLOR : 0;
+	(*e)->flags |= (c == 'S') ? FL_BYSIZE : 0;
 }
 
 static void		parse_flags(t_env **e, char *s)
 {
 	while (*s)
 	{
-		if (!ft_strchr("lrRaftucUgdi1nxG", *s))
+		if (!ft_strchr("lrRaftucUgdi1nxGS", *s))
 			illegal_option(*e, *s);
 		process_flags(e, *s);
 		s++;

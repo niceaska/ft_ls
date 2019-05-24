@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/14 14:17:56 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/23 14:49:13 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/23 22:49:58 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,66 +90,3 @@ void merge_sort(t_lst **list, t_cmp_func cmp, t_env *e)
 	merge_sort(&right, cmp, e);
 	*list = merge(left, right, cmp, e);
 }
-
-/*static t_lst	*merge(t_lst *l, t_lst *r, cmp_func cmp)
-{
-	t_lst *res;
-
-    if (!l || !r)
-        return ((!l) ? r : l);
-
-    if (cmp(l, r) < 0)
-	{
-        res = l;
-        res->next = merge(l->next, r, cmp);
-    }
-    else
-	{
-        res = r;
-        res->next = merge(l, r->next, cmp);
-    }
-    return (res); 
-}*/
-/*
-#include <stdio.h>
-int		main(void)
-{
-	t_lst *l;
-	int		i;
-	char *name = "test";
-	t_lst	*t;
-	t_lst	*b;
-
-	i = 3;
-	l = malloc(sizeof(t_lst));
-	t = l;
-	b = l;
-	while (i)
-	{
-		l->name = name;
-		name = name + 1;
-		l->next = malloc(sizeof(t_lst));
-		l = l->next;
-		--i;
-	}
-			l->name = "..";
-
-		l->next = malloc(sizeof(t_lst));
-		l = l->next;
-	l->name = ".";
-	l->next = NULL;
-	while (t)
-	{
-		printf("%s ", t->name);
-		t = t->next;
-		++i;
-	}
-	merge_sort(&b, NULL, ft_byalfa);
-	printf("\n");
-	while (b)
-	{
-		printf("%s ", b->name);
-		b = b->next;
-		++i;
-	}
-}*/

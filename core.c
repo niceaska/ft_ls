@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/17 17:42:41 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/23 14:47:01 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/23 22:50:20 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,38 +124,3 @@ void	process_args(t_env **e, char **ag, int ac)
 	((*e)->flags & FL_DIRS) ? 0 : process_dirs(*e, dirs, path, -1);
 	free_all(path, dirs, list, *e);
 }
-
-/*
-void	push(t_lst **list, char *pathname, char *name)
-{
-	t_lst *new;
-
-	new = init_list(pathname, name);
-	if (!list && !*list)
-	{
-		*list = new;
-		return ;
-	}
-	else
-	{
-		new->next = *list;
-		*list = new;
-	}
-	
-}
-static t_lst 	*fill_list(DIR *dir, char *path)
-{
-	char			*pathname;
-	t_lst			*list;
-	struct dirent	*d;
-
-	list = NULL;
-	while ((d = readdir(dir)) != NULL)
-	{
-		pathname = get_path(path, d->d_name);
-		push(&list, pathname, d->d_name);
-		free(pathname);
-	}
-	return (list);
-}
-*/

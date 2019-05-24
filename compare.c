@@ -6,7 +6,7 @@
 /*   By: lgigi <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 11:44:02 by lgigi             #+#    #+#             */
-/*   Updated: 2019/05/23 14:48:19 by lgigi            ###   ########.fr       */
+/*   Updated: 2019/05/24 12:07:12 by lgigi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,15 @@ static int		ft_byalfa(t_lst *l1, t_lst *l2, t_env *e)
 	name2 = l2->name;
 	res = (e->flags & FL_REV) ? ft_strcmp(name2, name1) : ft_strcmp(name1, name2);
 	return (res);
+}
+
+static int		ft_bysize(t_lst *l1, t_lst *l2, t_env *e)
+{
+	if (l1->stats->st_size < l2->stats->st_size)
+		return ((e->flags & FL_REV) ? -1 : 1);
+	else if (l1->stats->st_size > l2->stats->st_size)
+		return ((e->flags & FL_REV) ? 1 : -1);
+	return (ft_byalfa(l1, l2, e));
 }
 
 static int		ft_bytime(t_lst *l1, t_lst *l2, t_env *e)
@@ -56,6 +65,8 @@ t_cmp_func choose_cmp(t_env *e)
 
 	if (e->flags & FL_TIME)
 		cmp = ft_bytime;
+	else if (e->flags & FL_BYSIZE)
+		cmp = ft_bysize;
 	else
 		cmp = ft_byalfa;
 	return (cmp);

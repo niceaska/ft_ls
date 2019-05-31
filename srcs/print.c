@@ -29,7 +29,7 @@ static void		print_cols(t_lst **arr, t_env *e,
 							unsigned int size, long i)
 {
 	unsigned int	cols;
-	unsigned int 	rows;
+	unsigned int	rows;
 	unsigned int	base;
 	long			j;
 
@@ -66,7 +66,7 @@ static void		print_long(t_lst **arr, t_env *e, unsigned int size)
 	}
 }
 
-void	printer(t_lst *list, t_env *e, unsigned int i, int fl_dir)
+void			printer(t_lst *list, t_env *e, unsigned int i, int fl_dir)
 {
 	t_lst			**arr;
 

@@ -37,7 +37,7 @@ void	free_list(t_lst **list)
 		if (tmp->stats != NULL)
 			free(tmp->stats);
 		*list = (*list)->next;
-		free(tmp); 
+		free(tmp);
 	}
 }
 

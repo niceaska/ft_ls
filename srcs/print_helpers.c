@@ -20,7 +20,7 @@ static char		*choose_color(mode_t mode, char *chmod, char *link_buf)
 		return (STICKY_COL);
 	else if (S_ISCHR(mode) || S_ISBLK(mode))
 		return (BLKCHR_COL);
-	else if	(S_ISLNK(mode) && *link_buf)
+	else if (S_ISLNK(mode) && *link_buf)
 		return (LINK_COL);
 	else if (S_ISLNK(mode) && !*link_buf)
 		return (ORPAN_COL);
@@ -29,25 +29,25 @@ static char		*choose_color(mode_t mode, char *chmod, char *link_buf)
 	else if (S_ISFIFO(mode))
 		return (FIFO_COL);
 	else if ((mode & S_IXUSR) && chmod[3] == 's' \
-			&& (mode & S_IXGRP)  && (mode & S_IXOTH))
+			&& (mode & S_IXGRP) && (mode & S_IXOTH))
 		return (SETUID_COL);
 	else if ((mode & S_IXUSR) && chmod[6] == 's' \
-			&& (mode & S_IXGRP)  && (mode & S_IXOTH))
+			&& (mode & S_IXGRP) && (mode & S_IXOTH))
 		return (SETGID_COL);
 	else if ((mode & S_IXUSR) \
-			&& (mode & S_IXGRP)  && (mode & S_IXOTH))
+			&& (mode & S_IXGRP) && (mode & S_IXOTH))
 		return (EXEC_COL);
 	return (FILE_COL);
 }
 
-void		print_name(t_lst *el, t_env *e)
+void			print_name(t_lst *el, t_env *e)
 {
 	long ret;
 
 	if ((e->flags & FL_INODE) && !((e->flags & FL_LONG) || \
 		(e->flags & FL_NGUID) || (e->flags & FL_GLONG)))
 		ft_printf("%*ju ", e->max_ino, (uintmax_t)el->stats->st_ino);
-	if (e-> flags & FL_COLOR)
+	if (e->flags & FL_COLOR)
 		ft_putstr(choose_color(el->stats->st_mode, el->chmod, el->c));
 	ret = write(1, el->name, ft_strlen(el->name));
 	if (e->flags & FL_COLOR)
@@ -96,23 +96,25 @@ static void		print_time(t_lst *el, short flags)
 	ft_printf(" %.12s ", s);
 }
 
-void		long_helper(t_lst *el, t_maxs *maxs, t_env *e)
+void			long_helper(t_lst *el, t_maxs *maxs, t_env *e)
 {
 	struct group	*gr;
 	struct passwd	*uid;
 
-	(e->flags & FL_INODE) ? ft_printf("%*ju ", maxs->inode, (uintmax_t)el->stats->st_ino) : 0;
+	if (e->flags & FL_INODE)
+		ft_printf("%*ju ", maxs->inode, (uintmax_t)el->stats->st_ino);
 	ft_printf("%s %*hu", el->chmod, maxs->n_links, el->stats->st_nlink);
 	if (((uid = getpwuid(el->stats->st_uid)) == NULL) || (e->flags & FL_NGUID))
-		(e->flags & FL_GLONG) ? 0 : ft_printf(" %-*ld", maxs->users, el->stats->st_uid);
-	else
-		(e->flags & FL_GLONG) ? 0 : print_str(uid->pw_name, (long)maxs->users, 1);
+		(e->flags & FL_GLONG) ? \
+						0 : ft_printf(" %-*ld", maxs->users, el->stats->st_uid);
+	else if (!(e->flags & FL_GLONG))
+		print_str(uid->pw_name, (long)maxs->users, 1);
 	if (((gr = getgrgid(el->stats->st_gid)) == NULL) || (e->flags & FL_NGUID))
 		ft_printf("  %-*ld", maxs->groups, el->stats->st_gid);
 	else
 		print_str(gr->gr_name, (long)maxs->groups, 0);
 	if (S_ISBLK(el->stats->st_mode) || S_ISCHR(el->stats->st_mode))
-		ft_printf("%*d,%*d", maxs->major + 1, major(el->stats->st_rdev), 
+		ft_printf("%*d,%*d", maxs->major + 1, major(el->stats->st_rdev),
 						maxs->minor + 1, minor(el->stats->st_rdev));
 	else
 		ft_printf("  %*lld", maxs->size, el->stats->st_size);

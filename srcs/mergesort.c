@@ -12,71 +12,71 @@
 
 #include "ft_ls.h"
 
-static void insert(t_lst **next1, t_lst **next2,
-					t_lst **curr1, t_lst **curr2)
+static void		insert(t_lst **next1, t_lst **next2,
+						t_lst **curr1, t_lst **curr2)
 {
-    *next2 = (*curr2)->next; 
-	(*curr1)->next = *curr2; 
-	(*curr2)->next = *next1; 
-	*curr1 = *curr2; 
-	*curr2 = *next2; 
+	*next2 = (*curr2)->next;
+	(*curr1)->next = *curr2;
+	(*curr2)->next = *next1;
+	*curr1 = *curr2;
+	*curr2 = *next2;
 }
 
-static void	merge_helper(t_lst **curr1, t_lst **curr2, t_cmp_func cmp, t_env *e)
+static void		merge_helper(t_lst **curr1, t_lst **curr2,
+								t_cmp_func cmp, t_env *e)
 {
 	t_lst *next1;
 	t_lst *next2;
 
 	next1 = (*curr1)->next;
 	next2 = (*curr2)->next;
-    while (*curr1 && *curr2)
+	while (*curr1 && *curr2)
 	{
-        if ((cmp(*curr2, *curr1, e) >= 0) \
+		if ((cmp(*curr2, *curr1, e) >= 0) \
 			&& (cmp(*curr2, next1, e) < 0))
 			insert(&next1, &next2, curr1, curr2);
-        else if (next1->next)
-		{ 
-            next1 = next1->next; 
-            *curr1 = (*curr1)->next; 
-        }
-        else
-		{ 
-			next1->next = *curr2; 
-			return ; 
-		} 
-    } 
+		else if (next1->next)
+		{
+			next1 = next1->next;
+			*curr1 = (*curr1)->next;
+		}
+		else
+		{
+			next1->next = *curr2;
+			return ;
+		}
+	}
 }
 
-
-static t_lst	*merge_tool(t_lst *l1, t_lst* l2, t_cmp_func cmp, t_env *e) 
+static t_lst	*merge_tool(t_lst *l1, t_lst *l2, t_cmp_func cmp, t_env *e)
 {
-	t_lst *curr1;
-	t_lst *curr2;
+	t_lst	*curr1;
+	t_lst	*curr2;
 
 	if (!l1->next)
-	{ 
-		l1->next = l2; 
-		return (l1); 
-    } 
-    curr1 = l1;
-    curr2 = l2; 
+	{
+		l1->next = l2;
+		return (l1);
+	}
+	curr1 = l1;
+	curr2 = l2;
 	merge_helper(&curr1, &curr2, cmp, e);
-    return (l1); 
-} 
+	return (l1);
+}
 
 static t_lst	*merge(t_lst *l, t_lst *r, t_cmp_func cmp, t_env *e)
 {
-    if (!l || !r)
+	if (!l || !r)
 	{
-        return ((!l) ? r : l);
+		return ((!l) ? r : l);
 	}
 	if (cmp(l, r, e) < 0)
-		return (merge_tool(l, r, cmp, e)); 
+		return (merge_tool(l, r, cmp, e));
 	else
-		return (merge_tool(r, l, cmp, e)); 
+		return (merge_tool(r, l, cmp, e));
 }
 
-void merge_sort(t_lst **list, t_cmp_func cmp, t_env *e)
+void			merge_sort(t_lst **list, t_cmp_func cmp, t_env *e)
 {
 	t_lst	*left;
 	t_lst	*right;

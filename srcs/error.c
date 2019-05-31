@@ -22,8 +22,8 @@ void	print_error(t_lst *list, char *pathname, char **tab, t_env *e)
 void	illegal_option(t_env *e, char c)
 {
 	write(2, "ls: illegal option -- ", 22);
-	write(2 , &c, 1);
-	write(2 , "\n", 1);
+	write(2, &c, 1);
+	write(2, "\n", 1);
 	write(2, "usage: ls [-lrRaftuUgdi1nx] [file ...]\n", 39);
 	if (e)
 	{

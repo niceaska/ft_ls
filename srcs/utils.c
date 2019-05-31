@@ -12,7 +12,7 @@
 
 #include "ft_ls.h"
 
-char	**get_dirs(t_lst *list, t_env *e, unsigned int	i, int fl)
+char			**get_dirs(t_lst *list, t_env *e, unsigned int i, int fl)
 {
 	char			**dirs;
 
@@ -41,7 +41,7 @@ char	**get_dirs(t_lst *list, t_env *e, unsigned int	i, int fl)
 	return (dirs);
 }
 
-char	*get_path(char *path, char *new_dir)
+char			*get_path(char *path, char *new_dir)
 {
 	char	*swap;
 	char	*new_path;
@@ -56,17 +56,17 @@ char	*get_path(char *path, char *new_dir)
 	return (new_path);
 }
 
-void	split(t_lst *src, t_lst **left, t_lst **right)
+void			split(t_lst *src, t_lst **left, t_lst **right)
 {
 	t_lst *fst;
 	t_lst *nxt;
 
-    if (!src || !src->next)
-    {
-        *left = src;
-        *right = NULL;
+	if (!src || !src->next)
+	{
+		*left = src;
+		*right = NULL;
 		return ;
-    }
+	}
 	fst = src;
 	nxt = src->next;
 	while (nxt)
@@ -77,8 +77,8 @@ void	split(t_lst *src, t_lst **left, t_lst **right)
 			fst = fst->next;
 			nxt = nxt->next;
 		}
-    }
-    *left = src;
+	}
+	*left = src;
 	*right = fst->next;
 	fst->next = NULL;
 }
@@ -96,7 +96,7 @@ unsigned int	int_size(long num)
 	return (s);
 }
 
-void		get_rcols(t_env *e, unsigned int *rows,
+void			get_rcols(t_env *e, unsigned int *rows,
 							unsigned int size, unsigned int *cols)
 {
 	if (e->flags & FL_INODE)

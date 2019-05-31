@@ -15,7 +15,7 @@
 static int		get_termwidth(t_env **e)
 {
 	struct winsize w;
-    
+
 	if (isatty(STDOUT_FILENO))
 	{
 		if ((ioctl(STDOUT_FILENO, TIOCGWINSZ, &w)) == -1)
@@ -77,4 +77,5 @@ int				main(int ac, char **ag)
 		exit(EXIT_FAILURE);
 	ag = ft_parser(&e, ag, ac);
 	process_args(&e, ag, ac - e->ag_cnt);
+	exit(EXIT_SUCCESS);
 }

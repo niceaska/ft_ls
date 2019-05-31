@@ -12,12 +12,12 @@
 
 #include "ft_ls.h"
 
-static t_lst 	*fill_args(char **ag, int ac, short flags, t_lst *res)
+static t_lst		*fill_args(char **ag, int ac, short flags, t_lst *res)
 {
 	struct stat		st;
 	char			*path;
 
-	if (ac <= 0 || !ag || !*ag) 
+	if (ac <= 0 || !ag || !*ag)
 		return (NULL);
 	if (!(res = init_list(*ag, *ag)))
 	{
@@ -41,14 +41,15 @@ static t_lst 	*fill_args(char **ag, int ac, short flags, t_lst *res)
 	return (res);
 }
 
-static t_lst 	*fill_list(struct dirent *d, DIR *dir, t_lst *res, char *path)
+static t_lst		*fill_list(struct dirent *d,
+								DIR *dir, t_lst *res, char *path)
 {
 	char *pathname;
 
-	if (d == NULL) 
+	if (d == NULL)
 		return (NULL);
 	pathname = get_path(path, d->d_name);
-	if (!(res  = init_list(pathname, d->d_name)))
+	if (!(res = init_list(pathname, d->d_name)))
 	{
 		if ((d = readdir(dir)) != NULL)
 			res = fill_list(d, dir, res, path);
@@ -61,7 +62,7 @@ static t_lst 	*fill_list(struct dirent *d, DIR *dir, t_lst *res, char *path)
 	return (res);
 }
 
-static t_lst *proceass_list(t_env *e, DIR *dir, char *pathname)
+static t_lst		*proceass_list(t_env *e, DIR *dir, char *pathname)
 {
 	t_lst *list;
 
@@ -70,15 +71,15 @@ static t_lst *proceass_list(t_env *e, DIR *dir, char *pathname)
 	list = fill_list(readdir(dir), dir, list, pathname);
 	(e->flags & FL_NOSORT) ? 0 : merge_sort(&list, choose_cmp(e), e);
 	printer(list, e, 0, 1);
-	return (list);	
+	return (list);
 }
 
-static void	process_dirs(t_env *e, char **dirs, char *path, long i)
+static void			process_dirs(t_env *e, char **dirs, char *path, long i)
 {
 	char	**recdir;
 	char	*pathname;
 	t_lst	*list;
-	DIR 	*dir;
+	DIR		*dir;
 
 	while (dirs[++i])
 	{
@@ -102,7 +103,7 @@ static void	process_dirs(t_env *e, char **dirs, char *path, long i)
 	}
 }
 
-void	process_args(t_env **e, char **ag, int ac)
+void				process_args(t_env **e, char **ag, int ac)
 {
 	t_lst	*list;
 	char	*path;

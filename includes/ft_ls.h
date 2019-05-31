@@ -19,16 +19,14 @@
 # include <sys/xattr.h>
 # include <sys/acl.h>
 # include <sys/stat.h>
-# include <sys/sysmacros.h> 
 # include <grp.h>
 # include <pwd.h>
 # include <errno.h>
 # include <time.h>
 # include <unistd.h>
 # include <dirent.h>
-# include <stdio.h>
 # include <limits.h>
-# include <linux/limits.h>
+# include <stdio.h>
 
 # define FILE_COL "\033[00m"
 # define LINK_COL "\033[01;36m"
@@ -42,7 +40,6 @@
 # define SETGID_COL "\033[30;43m"
 # define STICKY_COL "\033[37;44m"
 # define COL "\033[0m"
-
 
 # define CHMOD_UREAD(m)((m) & S_IRUSR) ? 'r' : '-'
 # define CHMOD_UWRITE(m)((m) & S_IWUSR) ? 'w' : '-'
@@ -110,7 +107,7 @@ typedef struct		s_lst
 	struct s_lst	*next;
 }					t_lst;
 
-typedef int (*t_cmp_func)(t_lst *, t_lst *, t_env *e);
+typedef int			(*t_cmp_func)(t_lst *, t_lst *, t_env *e);
 
 unsigned int		list_size(t_lst *list);
 t_lst				*init_list(char *pathname, char *name);
@@ -135,12 +132,13 @@ void				printer(t_lst *list, t_env *e, unsigned int i, int fl_dir);
 void				print_name(t_lst *el, t_env *e);
 void				long_helper(t_lst *el, t_maxs *maxs, t_env *e);
 
-void				print_error(t_lst *list, char *pathname, char **tab, t_env *e);
+void				print_error(t_lst *list, char *pathname,
+										char **tab, t_env *e);
 void				illegal_option(t_env *e, char c);
 
 void				merge_sort(t_lst **list, t_cmp_func cmp, t_env *e);
 void				split(t_lst *src, t_lst **left, t_lst **right);
-t_cmp_func 			choose_cmp(t_env *e);
+t_cmp_func			choose_cmp(t_env *e);
 
 void				free_tab(char **tab);
 void				free_list(t_lst **list);

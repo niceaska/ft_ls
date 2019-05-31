@@ -18,12 +18,12 @@ static void		process_flags(t_env **e, char c)
 	(*e)->flags |= (c == 'r') ? FL_REV : 0;
 	(*e)->flags |= (c == 'R') ? FL_REC : 0;
 	(*e)->flags |= (c == 'a' || c == 'f') ? FL_DOT : 0;
-	(*e)->flags |= (c =='t') ? FL_TIME : 0;
-	(*e)->flags |= (c =='u') ? FL_UTIME : 0;
+	(*e)->flags |= (c == 't') ? FL_TIME : 0;
+	(*e)->flags |= (c == 'u') ? FL_UTIME : 0;
 	(*e)->flags |= (c == 'c') ? FL_CTIME : 0;
-	(*e)->flags |= (c =='g') ? FL_GLONG : 0;
-	(*e)->flags |= (c =='d') ? FL_DIRS : 0;
-	(*e)->flags |= (c =='1') ? FL_ONE : 0;
+	(*e)->flags |= (c == 'g') ? FL_GLONG : 0;
+	(*e)->flags |= (c == 'd') ? FL_DIRS : 0;
+	(*e)->flags |= (c == '1') ? FL_ONE : 0;
 	(*e)->flags |= (c == 'U' || c == 'f') ? FL_NOSORT : 0;
 	(*e)->flags |= (c == 'i') ? FL_INODE : 0;
 	(*e)->flags |= (c == 'n') ? FL_NGUID : 0;
@@ -43,7 +43,7 @@ static void		parse_flags(t_env **e, char *s)
 	}
 }
 
-char	**ft_parser(t_env **e, char **ag, int ac)
+char			**ft_parser(t_env **e, char **ag, int ac)
 {
 	int i;
 
@@ -60,7 +60,7 @@ char	**ft_parser(t_env **e, char **ag, int ac)
 	return (ag + i);
 }
 
-static void parse_maxs_helper(t_maxs **maxs, t_lst *el, short flags)
+static void		parse_maxs_helper(t_maxs **maxs, t_lst *el, short flags)
 {
 	struct group	*gr;
 	struct passwd	*uid;
@@ -78,7 +78,8 @@ static void parse_maxs_helper(t_maxs **maxs, t_lst *el, short flags)
 		(*maxs)->users = MAX((*maxs)->users, ft_strlen(uid->pw_name));
 }
 
-void	parse_maxs(t_maxs **maxs, t_lst **arr, unsigned int size, short flags)
+void			parse_maxs(t_maxs **maxs, t_lst **arr,
+							unsigned int size, short flags)
 {
 	unsigned int s;
 	unsigned int i;
@@ -89,9 +90,9 @@ void	parse_maxs(t_maxs **maxs, t_lst **arr, unsigned int size, short flags)
 		parse_maxs_helper(maxs, arr[i], flags);
 		if (S_ISCHR(arr[i]->stats->st_mode))
 		{
-			(*maxs)->major = MAX((*maxs)->major, 
+			(*maxs)->major = MAX((*maxs)->major,
 							int_size(major(arr[i]->stats->st_rdev)));
-			(*maxs)->minor = MAX((*maxs)->minor, 
+			(*maxs)->minor = MAX((*maxs)->minor,
 							int_size(minor(arr[i]->stats->st_rdev)));
 			s = (*maxs)->major + (*maxs)->minor + 1;
 		}
